@@ -61,7 +61,8 @@ class HomeServiceImpl: HomeService {
             let decoder = JSONDecoder()
             if let data = data,
                let remindersArray = try? decoder.decode([RemindersModel].self, from: data) {
-                completion(.success(remindersArray))
+                let filterArray = remindersArray.filter({ $0.isCompleted == false })
+                completion(.success(filterArray))
             } else if (response as? HTTPURLResponse)?.statusCode == 200 {
                 completion(.success([]))
             } else {
