@@ -14,10 +14,10 @@ protocol HomeService {
 }
 
 class HomeServiceImpl: HomeService {
-    private let userSession: UrlSession
+    private let urlSession: UrlSession
     
-    init(userSession: UrlSession = MyUrlSession.shared) {
-        self.userSession = userSession
+    init(urlSession: UrlSession = MyUrlSession.shared) {
+        self.urlSession = urlSession
     }
     
     func deleteReminder(identifier: String) {
@@ -28,7 +28,8 @@ class HomeServiceImpl: HomeService {
         }
         var request = URLRequest(url: url)
         request.httpBody = jsonData
-        let task = userSession.dataTask(with: request) { _, _, error in
+        request.httpMethod = "POST"
+        let task = urlSession.dataTask(with: request) { _, _, error in
             if error != nil {
                 print("erro ao deletar o request")
             }
@@ -44,7 +45,8 @@ class HomeServiceImpl: HomeService {
         }
         var request = URLRequest(url: url)
         request.httpBody = jsonData
-        let task = userSession.dataTask(with: request) { _, _, error in
+        request.httpMethod = "POST"
+        let task = urlSession.dataTask(with: request) { _, _, error in
             if error != nil {
                 print("erro ao completar o request")
             }
@@ -56,8 +58,9 @@ class HomeServiceImpl: HomeService {
         guard let url = URL(string: Endpoints.getReminders) else {
             return
         }
-        let request = URLRequest(url: url)
-        let task = userSession.dataTask(with: request) { data, response, error in
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        let task = urlSession.dataTask(with: request) { data, response, error in
             let decoder = JSONDecoder()
             if let data = data,
                let remindersArray = try? decoder.decode([RemindersModel].self, from: data) {

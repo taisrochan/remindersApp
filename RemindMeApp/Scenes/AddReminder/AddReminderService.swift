@@ -27,6 +27,7 @@ class AddReminderServiceImpl: AddReminderService {
         }
         var request = URLRequest(url: url)
         request.httpBody = jsonData
+        request.httpMethod = "POST"
         let task = userSession.dataTask(with: request) { _, _, error in
             if error != nil {
                 completion(.failure(ServiceErros.serviceFailure))
